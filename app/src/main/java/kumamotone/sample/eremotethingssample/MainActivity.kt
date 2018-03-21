@@ -6,7 +6,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
@@ -22,7 +21,7 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun sendToRemoconWithoutCoroutine(data: String) {
+    private suspend fun sendToRemoconWithoutCoroutine(data: String) {
         DatagramChannel.open().use {
             it.socket().bind(InetSocketAddress(9999 /* 送り元ポート */))
             val buf = ByteBuffer.allocate(data.length).also {
@@ -73,37 +72,23 @@ class MainActivity : Activity() {
 
     private fun oyasumi() {
         launch {
-            async {
-                sendToRemoconWithoutCoroutine(getString(R.string.light_off))
-            }.await()
-            async {
-                sendToRemoconWithoutCoroutine(getString(R.string.aircon_off))
-            }.await()
-            async {
-                sendToRemoconWithoutCoroutine(getString(R.string.timer7hours))
-            }
+            sendToRemoconWithoutCoroutine(getString(R.string.light_off))
+            sendToRemoconWithoutCoroutine(getString(R.string.aircon_off))
+            sendToRemoconWithoutCoroutine(getString(R.string.timer7hours))
         }
     }
 
     private fun imhome() {
         launch {
-            async {
-                sendToRemoconWithoutCoroutine(getString(R.string.light_on))
-            }.await()
-            async {
-                sendToRemoconWithoutCoroutine(getString(R.string.heat))
-            }.await()
+            sendToRemoconWithoutCoroutine(getString(R.string.light_on))
+            sendToRemoconWithoutCoroutine(getString(R.string.heat))
         }
     }
 
     private fun imgoing() {
         launch {
-            async {
-                sendToRemoconWithoutCoroutine(getString(R.string.light_off))
-            }.await()
-            async {
-                sendToRemoconWithoutCoroutine(getString(R.string.aircon_off))
-            }.await()
+            sendToRemoconWithoutCoroutine(getString(R.string.light_off))
+            sendToRemoconWithoutCoroutine(getString(R.string.aircon_off))
         }
     }
 
